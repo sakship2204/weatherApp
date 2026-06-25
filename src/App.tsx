@@ -3,7 +3,7 @@ import "./App.css";
 function App() {
   return (
     <>
-      <div className="ticks"></div>
+      <div className="underline">underline text</div>
       <section id="spacer"></section>
     </>
   );
