@@ -1,0 +1,9 @@
+export const DailyForeCastCard = ({ title, value }) => {
+  return (
+    <div className="metric-card flex flex-col gap-[1rem] bg-custom-gray app-wide-border-radius  my-[1rem] px-[1rem] py-[1rem] grow ">
+      <span className="text-lg text-gray-300">{title}</span>
+      <span>Weather icon</span>
+      <span className="text-2xl">{value}</span>
+    </div>
+  );
+};

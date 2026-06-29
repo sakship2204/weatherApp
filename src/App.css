@@ -1,1 +1,10 @@
-@import "tailwindcss";
+#main-container {
+  height: 100%;
+  background-color: rgb(12, 3, 50);
+  color: white;
+}
+@reference "tailwindcss";
+
+.app-wide-border-radius {
+  @apply rounded-xl;
+}
