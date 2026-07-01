@@ -3,11 +3,20 @@ import { NavBar } from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
 import { useState } from "react";
 import { WeatherReport } from "./components/WeatherReport";
+import { getCoordinates } from "./services/getLocation";
+import { getWeatherData } from "./services/getWeatherData";
 
 function App() {
   const [currentCity, setCurrentCity] = useState("");
 
-  const initiateSearchForLocation = () => {};
+  const initiateSearchForLocation = async () => {
+    const response = await getCoordinates(currentCity);
+    if (response) {
+      const weatherData = getWeatherData(response.latitude, response.latitude);
+
+      console.log(weatherData);
+    }
+  };
 
   return (
     <>
