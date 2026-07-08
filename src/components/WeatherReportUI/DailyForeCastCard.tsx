@@ -1,6 +1,6 @@
 import { WeatherCodeUI } from "../CustomElements/WeatherCodeUI";
 
-export const DailyForeCastCard = ({ data }) => {
+export const DailyForeCastCard = ({ data }: Record<string, any>) => {
   const { title, min, max, code } = data;
   return (
     <div className="metric-card flex flex-col gap-[1rem] bg-custom-gray app-wide-border-radius  my-[1rem] px-[1rem] py-[1rem] grow ">

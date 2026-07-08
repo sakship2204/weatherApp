@@ -3,17 +3,36 @@ import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import styles from "./Dropdown.module.css";
 
+type DropdownOption = {
+  label: string;
+  options: string[];
+  parameter: string;
+};
+
+type DropDownProps = {
+  dropDownTitle: string;
+  options: DropdownOption[];
+  hasSettings?: boolean;
+  applySettings?: (settings: Record<string, string>) => void;
+  currentSettings: Record<string, string>;
+};
+
 export const DropDown = ({
   dropDownTitle,
   options,
   hasSettings = false,
   applySettings,
   currentSettings,
-}) => {
+}: DropDownProps) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [settings, setSettings] = useState(currentSettings);
+  const [settings, setSettings] =
+    useState<Record<string, string>>(currentSettings);
+
+  useEffect(() => {
+    setSettings(currentSettings);
+  }, [currentSettings]);
 
   useEffect(() => {
     const handleOutsideClick = (event: PointerEvent) => {
@@ -54,6 +73,7 @@ export const DropDown = ({
                 {unitType.label}:
                 <select
                   className="text-sm bg-gray-600 border border-gray-400 ms-[1.5rem]"
+                  value={settings[unitType.parameter] ?? ""}
                   onChange={(event) => {
                     const selectedValue = event.currentTarget.value;
 
@@ -64,11 +84,7 @@ export const DropDown = ({
                   }}
                 >
                   {unitType.options.map((option) => (
-                    <option
-                      key={option}
-                      value={option}
-                      selected={option === settings[unitType.parameter]}
-                    >
+                    <option key={option} value={option}>
                       {option}
                     </option>
                   ))}

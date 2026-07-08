@@ -108,7 +108,7 @@ export const getWeatherData = async (
     };
 
     return weatherData;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

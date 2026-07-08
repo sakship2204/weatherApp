@@ -47,7 +47,7 @@ function App() {
         dispatch(setWeatherData(weatherData));
       }
       setSearching(LoadingState.LOADED);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       setSearching(LoadingState.ERROR);
       setError(e.message);

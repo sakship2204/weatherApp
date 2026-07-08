@@ -1,5 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+type InitialStateType = {
+  city: string;
+  currentWeather: {
+    location: string;
+    currentDateTime: string;
+    code: string;
+    temperature: string;
+    feelsLike: string;
+    humidity: string;
+    precipitation: string;
+    windSpeed: string;
+  };
+  units: {
+    temperatureUnit: string;
+    windUnit: string;
+    precipitation: string;
+  };
+  dailyForecast: Array<Record<string, any>>;
+  hourlyForecastFor7Days: Array<Record<string, any>>;
+};
 export const weatherSlice = createSlice({
   name: "weather",
   initialState: {
@@ -21,7 +41,7 @@ export const weatherSlice = createSlice({
     },
     dailyForecast: [],
     hourlyForecastFor7Days: [],
-  },
+  } as InitialStateType,
   reducers: {
     setCity: (state, action) => {
       state.city = action.payload;
@@ -84,7 +104,7 @@ export const weatherSlice = createSlice({
         const date = new Date(
           weatherData.daily.time[index],
         ).toLocaleDateString();
-        let daysHourlyForecast = [];
+        let daysHourlyForecast: Array<Record<string, any>> = [];
         hourly.time.forEach((item: string, index: number) => {
           const hourlyDate = new Date(item);
 

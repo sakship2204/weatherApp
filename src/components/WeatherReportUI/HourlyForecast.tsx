@@ -8,7 +8,7 @@ export const HourlyForecast = () => {
   );
   const [selectedDay, setSelectedDay] = useState("");
   const selectedForecast = hourlyForecastFor7Days.find(
-    (forecastDay) => forecastDay.day === selectedDay,
+    (forecastDay: Record<string, any>) => forecastDay.day === selectedDay,
   );
 
   useEffect(() => {
@@ -26,22 +26,26 @@ export const HourlyForecast = () => {
           value={selectedDay}
           onChange={(event) => setSelectedDay(event.currentTarget.value)}
         >
-          {hourlyForecastFor7Days.map((forecast, index) => (
-            <option key={index} value={forecast.day}>
-              {forecast.day}
-            </option>
-          ))}
+          {hourlyForecastFor7Days.map(
+            (forecast: Record<string, any>, index: number) => (
+              <option key={index} value={forecast.day}>
+                {forecast.day}
+              </option>
+            ),
+          )}
         </select>
       </div>
       <div className="overflow-y-scroll max-h-[575px] ">
-        {selectedForecast?.HourlyForecast.map((forecast, index) => (
-          <HourlyForecastCard
-            time={forecast.time}
-            temp={forecast.temperature}
-            weatherType={forecast.code}
-            key={index}
-          />
-        ))}
+        {selectedForecast?.HourlyForecast.map(
+          (forecast: Record<string, any>, index: number) => (
+            <HourlyForecastCard
+              time={forecast.time}
+              temp={forecast.temperature}
+              weatherType={forecast.code}
+              key={index}
+            />
+          ),
+        )}
       </div>
     </div>
   );

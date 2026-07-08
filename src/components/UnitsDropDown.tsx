@@ -32,7 +32,7 @@ export const UnitsDropDown = () => {
     <DropDown
       hasSettings
       options={units}
-      dropDownTitle={"Units"}
+      dropDownTitle="Units"
       currentSettings={unitsFromStore}
       applySettings={applySettings}
     />

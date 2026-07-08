@@ -32,7 +32,7 @@ export async function getCoordinates(locationInput: string) {
     } else {
       throw new Error("No results found for that location.");
     }
-  } catch (error) {
+  } catch (error: any) {
     throw new Error("Error fetching geocoding data:", error);
   }
 }
