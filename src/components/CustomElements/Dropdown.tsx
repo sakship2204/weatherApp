@@ -8,9 +8,12 @@ export const DropDown = ({
   options,
   hasSettings = false,
   applySettings,
+  currentSettings,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const [settings, setSettings] = useState(currentSettings);
 
   useEffect(() => {
     const handleOutsideClick = (event: PointerEvent) => {
@@ -49,9 +52,25 @@ export const DropDown = ({
                 className="temperature flex text-base py-[1rem] items-center"
               >
                 {unitType.label}:
-                <select className="text-sm bg-gray-600 border border-gray-400 ms-[1.5rem]">
+                <select
+                  className="text-sm bg-gray-600 border border-gray-400 ms-[1.5rem]"
+                  onChange={(event) => {
+                    const selectedValue = event.currentTarget.value;
+
+                    setSettings((prev) => ({
+                      ...prev,
+                      [unitType.parameter]: selectedValue,
+                    }));
+                  }}
+                >
                   {unitType.options.map((option) => (
-                    <option key={option}>{option}</option>
+                    <option
+                      key={option}
+                      value={option}
+                      selected={option === settings[unitType.parameter]}
+                    >
+                      {option}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -60,7 +79,7 @@ export const DropDown = ({
 
           <button
             className="app-wide-border-radius bg-blue-300 p-[0.5rem] text-base mb-[0.7rem] ms-[8rem] cursor-pointer"
-            onClick={applySettings}
+            onClick={() => applySettings?.(settings)}
           >
             Apply
           </button>

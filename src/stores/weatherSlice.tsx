@@ -30,10 +30,15 @@ export const weatherSlice = createSlice({
       const data = action.payload;
       state.currentWeather.location = data.location;
     },
+    setUnits: (state, action) => {
+      state.units.temperatureUnit = action.payload.temperatureUnit;
+      state.units.windUnit = action.payload.windUnit;
+      state.units.precipitation = action.payload.precipitation;
+    },
     setWeatherData: (state, action) => {
       const weatherData = action.payload;
       const firstValue = (values: ArrayLike<number> | null | undefined) =>
-        values?.[0]?.toFixed(2) ?? "";
+        values?.[0]?.toFixed(1) ?? "";
 
       state.currentWeather.temperature = firstValue(
         weatherData.minutely15.temperature_2m,
@@ -50,6 +55,8 @@ export const weatherSlice = createSlice({
       state.currentWeather.windSpeed = firstValue(
         weatherData.minutely15.wind_speed_10m,
       );
+      state.currentWeather.code =
+        weatherData.minutely15.weather_code?.[0] ?? "";
 
       state.currentWeather.currentDateTime = new Date(
         weatherData.daily.time[0],
@@ -108,7 +115,7 @@ export const weatherSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setCity, setWeatherData, setLocationAndDate } =
+export const { setCity, setWeatherData, setLocationAndDate, setUnits } =
   weatherSlice.actions;
 
 export default weatherSlice.reducer;

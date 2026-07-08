@@ -51,6 +51,7 @@ export const WeatherReport = () => {
     <div className="flex mt-[2rem] gap-[2rem]">
       <div className="left-section grow max-w-[70%]">
         <CurrentWeatherCard />
+
         <div className="flex gap-[1rem]">
           {additionalParameters.map((parameter, index) => (
             <AdditionalMetricCard

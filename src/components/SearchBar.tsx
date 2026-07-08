@@ -7,6 +7,7 @@ import { setCity } from "../stores/weatherSlice";
 
 type SearchBarProps = {
   searchWeather: () => void;
+  disabled: boolean;
 };
 
 type RootState = {
@@ -15,7 +16,7 @@ type RootState = {
   };
 };
 
-function SearchBar({ searchWeather }: SearchBarProps) {
+function SearchBar({ searchWeather, disabled }: SearchBarProps) {
   const [draftCity, setDraftCity] = useState("");
   const dispatch = useDispatch();
   const currentCity = useSelector((state: RootState) => state.weather.city);
@@ -62,8 +63,9 @@ function SearchBar({ searchWeather }: SearchBarProps) {
           )}
         </span>
         <button
-          className="bg-blue-500 ms-[1rem] px-[1.3rem]  py-[0.7rem] cursor-pointer app-wide-border-radius text-white"
+          className={`bg-blue-500 ms-[1rem] px-[1.3rem]  py-[0.7rem]  app-wide-border-radius text-white ${draftCity === "" || disabled ? "opacity-50 cursor-text" : " cursor-pointer"}`}
           onClick={searchWeather}
+          disabled={draftCity == "" || disabled}
         >
           Search
         </button>

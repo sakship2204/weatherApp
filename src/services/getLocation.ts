@@ -25,20 +25,14 @@ export async function getCoordinates(locationInput: string) {
     const data = await response.json();
 
     if (data.length > 0) {
-      // Nominatim returns coordinates as strings inside an array of matches
       const latitude = parseFloat(data[0].lat);
       const longitude = parseFloat(data[0].lon);
 
-      console.log(`Location: ${data[0].display_name}`);
-
-      console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
       return { latitude, longitude, location: data[0].display_name };
     } else {
-      console.log("No results found for that location.");
-      return null;
+      throw new Error("No results found for that location.");
     }
   } catch (error) {
-    console.error("Error fetching geocoding data:", error);
-    return null;
+    throw new Error("Error fetching geocoding data:", error);
   }
 }
