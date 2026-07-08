@@ -1,5 +1,24 @@
 import { fetchWeatherApi } from "openmeteo";
 
+const buildTimeRange = (
+  start: number,
+  end: number,
+  interval: number,
+  utcOffsetSeconds: number,
+) =>
+  Array.from(
+    {
+      length: (end - start) / interval,
+    },
+    (_, index) =>
+      new Date(
+        (start + index * interval + utcOffsetSeconds) * 1000,
+      ).toISOString(),
+  );
+
+const valuesToArray = (values: Float32Array | null | undefined) =>
+  values ? Array.from(values) : [];
+
 export const getWeatherData = async (
   latitude: string | number,
   longitude: string | number,
@@ -7,14 +26,16 @@ export const getWeatherData = async (
   const params = {
     latitude: latitude,
     longitude: longitude,
-    hourly: [
+    daily: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
+    hourly: ["temperature_2m", "weather_code"],
+    minutely_15: [
       "temperature_2m",
       "relative_humidity_2m",
-      "wind_speed_10m",
+      "apparent_temperature",
       "precipitation",
-      "is_day",
+      "wind_speed_10m",
+      "weather_code",
     ],
-    minutely_15: "temperature_2m",
     forecast_minutely_15: 4,
     past_minutely_15: 4,
   };
@@ -37,48 +58,54 @@ export const getWeatherData = async (
 
   const minutely15 = response.minutely15()!;
   const hourly = response.hourly()!;
+  const daily = response.daily()!;
 
   // Note: The order of weather variables in the URL query and the indices below need to match!
   const weatherData = {
     minutely15: {
-      time: Array.from(
-        {
-          length:
-            (Number(minutely15.timeEnd()) - Number(minutely15.time())) /
-            minutely15.interval(),
-        },
-        (_, i) =>
-          new Date(
-            (Number(minutely15.time()) +
-              i * minutely15.interval() +
-              utcOffsetSeconds) *
-              1000,
-          ),
+      time: buildTimeRange(
+        Number(minutely15.time()),
+        Number(minutely15.timeEnd()),
+        minutely15.interval(),
+        utcOffsetSeconds,
       ),
-      temperature_2m: minutely15.variables(0)!.valuesArray(),
+      temperature_2m: valuesToArray(minutely15.variables(0)?.valuesArray()),
+      relative_humidity_2m: valuesToArray(
+        minutely15.variables(1)?.valuesArray(),
+      ),
+      apparent_temperature: valuesToArray(
+        minutely15.variables(2)?.valuesArray(),
+      ),
+      precipitation: valuesToArray(minutely15.variables(3)?.valuesArray()),
+      wind_speed_10m: valuesToArray(minutely15.variables(4)?.valuesArray()),
+      weather_code: valuesToArray(minutely15.variables(5)?.valuesArray()),
     },
     hourly: {
-      time: Array.from(
-        {
-          length:
-            (Number(hourly.timeEnd()) - Number(hourly.time())) /
-            hourly.interval(),
-        },
-        (_, i) =>
-          new Date(
-            (Number(hourly.time()) + i * hourly.interval() + utcOffsetSeconds) *
-              1000,
-          ),
+      time: buildTimeRange(
+        Number(hourly.time()),
+        Number(hourly.timeEnd()),
+        hourly.interval(),
+        utcOffsetSeconds,
       ),
-      temperature_2m: hourly.variables(0)!.valuesArray(),
-      relative_humidity_2m: hourly.variables(1)!.valuesArray(),
-      wind_speed_10m: hourly.variables(2)!.valuesArray(),
-      precipitation: hourly.variables(3)!.valuesArray(),
-      is_day: hourly.variables(4)!.valuesArray(),
+      temperature_2m: valuesToArray(hourly.variables(0)?.valuesArray()),
+      weather_code: valuesToArray(hourly.variables(1)?.valuesArray()),
+    },
+    daily: {
+      time: buildTimeRange(
+        Number(daily.time()),
+        Number(daily.timeEnd()),
+        daily.interval(),
+        utcOffsetSeconds,
+      ),
+      weather_code: valuesToArray(daily.variables(0)?.valuesArray()),
+      temperature_2m_max: valuesToArray(daily.variables(1)?.valuesArray()),
+      temperature_2m_min: valuesToArray(daily.variables(2)?.valuesArray()),
     },
   };
 
   // The 'weatherData' object now contains a simple structure, with arrays of datetimes and weather information
   console.log("\nMinutely15 data:\n", weatherData.minutely15);
   console.log("\nHourly data:\n", weatherData.hourly);
+  console.log("\nDaily data:\n", weatherData.daily);
+  return weatherData;
 };

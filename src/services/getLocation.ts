@@ -30,8 +30,9 @@ export async function getCoordinates(locationInput: string) {
       const longitude = parseFloat(data[0].lon);
 
       console.log(`Location: ${data[0].display_name}`);
+
       console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-      return { latitude, longitude };
+      return { latitude, longitude, location: data[0].display_name };
     } else {
       console.log("No results found for that location.");
       return null;

@@ -2,26 +2,40 @@ import { type ChangeEvent, type KeyboardEvent, useState } from "react";
 import styles from "./SearchBar.module.css";
 import { FaSearch } from "react-icons/fa";
 import { FaRegCircleXmark } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { setCity } from "../stores/weatherSlice";
 
-function SearchBar({ currentCity, setCurrentCity, searchWeather }) {
+type SearchBarProps = {
+  searchWeather: () => void;
+};
+
+type RootState = {
+  weather: {
+    city: string;
+  };
+};
+
+function SearchBar({ searchWeather }: SearchBarProps) {
   const [draftCity, setDraftCity] = useState("");
+  const dispatch = useDispatch();
+  const currentCity = useSelector((state: RootState) => state.weather.city);
 
   const handleCityChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDraftCity(e.currentTarget.value);
   };
 
   const commitCity = () => {
-    setCurrentCity(draftCity.trim());
+    dispatch(setCity(draftCity.trim()));
   };
 
   const handleCityEntered = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setCurrentCity(e.currentTarget.value.trim());
+      dispatch(setCity(e.currentTarget.value.trim()));
     }
   };
 
   const handleClearCity = () => {
-    setCurrentCity("");
+    dispatch(setCity(""));
     setDraftCity("");
   };
 

@@ -1,5 +1,5 @@
 @import "tailwindcss";
 @theme {
   --color-custom-gray: rgb(89, 92, 127);
-  --color-custom-gray-2: rgb(140, 146, 180);
+  --color-custom-gray-2: rgb(136, 140, 170);
 }

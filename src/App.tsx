@@ -1,20 +1,34 @@
 import "./App.css";
 import { NavBar } from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
-import { useState } from "react";
+
 import { WeatherReport } from "./components/WeatherReport";
 import { getCoordinates } from "./services/getLocation";
 import { getWeatherData } from "./services/getWeatherData";
+import { useDispatch, useSelector } from "react-redux";
+import { setWeatherData, setLocationAndDate } from "./stores/weatherSlice";
+
+type RootState = {
+  weather: {
+    city: string;
+  };
+};
 
 function App() {
-  const [currentCity, setCurrentCity] = useState("");
+  const city = useSelector((state: RootState) => state.weather.city);
+  const dispatch = useDispatch();
 
   const initiateSearchForLocation = async () => {
-    const response = await getCoordinates(currentCity);
-    if (response) {
-      const weatherData = getWeatherData(response.latitude, response.latitude);
+    const response = await getCoordinates(city);
 
-      console.log(weatherData);
+    if (response) {
+      const weatherData = await getWeatherData(
+        response.latitude,
+        response.longitude,
+      );
+      dispatch(setLocationAndDate({ location: response.location }));
+
+      dispatch(setWeatherData(weatherData));
     }
   };
 
@@ -26,11 +40,7 @@ function App() {
         <div className="text-center text-white mt-[4rem] text-6xl">
           How's the sky looking today?
         </div>
-        <SearchBar
-          currentCity={currentCity}
-          setCurrentCity={setCurrentCity}
-          searchWeather={initiateSearchForLocation}
-        />
+        <SearchBar searchWeather={initiateSearchForLocation} />
 
         <WeatherReport />
       </div>
