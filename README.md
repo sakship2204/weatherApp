@@ -12,7 +12,7 @@ the last weather app you would need to plan things ;p
 
 ### OpenMeteo API and OpenStreet API for location and weather data
 
-###Links
+### Links
 
 [Live site URL](https://sakship2204.github.io/weatherApp/)
 
