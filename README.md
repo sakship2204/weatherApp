@@ -14,7 +14,7 @@ the last weather app you would need to plan things ;p
 
 ###Links
 
-[Live stire URL](https://sakship2204.github.io/weatherApp/)
+[Live site URL](https://sakship2204.github.io/weatherApp/)
 
 improvements: 1. use proper icons
               2. improve the units dropdown ui  
